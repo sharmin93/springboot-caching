@@ -1,10 +1,11 @@
 package com.example.spring_caching_project.service;
 
-import com.example.spring_caching_project.entity.PersonEntity;
-import com.example.spring_caching_project.repository.PersonRepository;
+import com.example.spring_caching_project.service.db.entity.PersonEntity;
+import com.example.spring_caching_project.service.db.repository.PersonRepository;
 import com.example.spring_caching_project.request.PersonRequest;
 import com.example.spring_caching_project.response.PersonData;
 import com.example.spring_caching_project.response.PersonDataResponse;
+import com.example.spring_caching_project.response.PersonDeleteResponse;
 import com.example.spring_caching_project.response.PersonResponse;
 import org.springframework.stereotype.Service;
 
@@ -67,5 +68,30 @@ public class personServiceImpl implements PersonService {
         }
         result.setPersonDataList(userDataList);
         return result;
+    }
+
+    @Override
+    public PersonDeleteResponse deleteById(long id) {
+        personRepository.deleteById(id);
+        PersonDeleteResponse personDeleteResponse = new PersonDeleteResponse();
+        personDeleteResponse.setStatus(true);
+        return personDeleteResponse;
+    }
+
+    @Override
+    public PersonResponse findPersonByFirstName(String firstName) {
+        PersonEntity findFirstName = personRepository.findByFirstName(firstName);
+        PersonResponse personResponse = new PersonResponse();
+        if (findFirstName == null) {
+            return null;
+        } else {
+            personResponse.setId(findFirstName.getId());
+            personResponse.setFirstName(findFirstName.getFirstName());
+            personResponse.setLastName(findFirstName.getLastName());
+            personResponse.setAge(findFirstName.getAge());
+            return personResponse;
+        }
+
+
     }
 }

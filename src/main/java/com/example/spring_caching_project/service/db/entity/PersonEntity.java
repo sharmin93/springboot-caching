@@ -1,4 +1,4 @@
-package com.example.spring_caching_project.entity;
+package com.example.spring_caching_project.service.db.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
