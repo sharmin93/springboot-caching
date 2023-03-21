@@ -21,7 +21,7 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @CachePut(value = "person", key = "#root.methodName")
+//    @CachePut(value = "person", key = "#root.methodName")
     @PostMapping(value = "")
     public ResponseEntity<PersonResponse> createPerson(@RequestBody PersonRequest personRequest) {
         PersonResponse personResponse = personService.createPerson(personRequest);
@@ -30,7 +30,7 @@ public class PersonController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    @Cacheable(value = "person", key = "#root.args[0]")
+//    @Cacheable(value = "person", key = "#root.args[0]")
     public ResponseEntity<PersonResponse> getPersonById(@PathVariable("id") long id) {
         System.out.println("called getPersonById method");
         PersonResponse personResponse = personService.getById(id);
@@ -39,7 +39,7 @@ public class PersonController {
 
     @GetMapping("/firstName")
     @ResponseBody
-    @Cacheable(value = "person", key = "#root.methodName")
+//    @Cacheable(value = "person", key = "#root.methodName")
     public ResponseEntity<PersonResponse> getPersonByFirstname(@RequestParam String firstName) {
         System.out.println("called getPersonByFirstName method");
         PersonResponse personResponse = personService.findPersonByFirstName(firstName);
@@ -48,7 +48,7 @@ public class PersonController {
 
     @GetMapping("")
     @ResponseBody
-    @Cacheable(value = "person", key = "#root.method.name")
+//    @Cacheable(value = "person", key = "#root.method.name")
     public ResponseEntity<PersonDataResponse> getAllPerson() {
         PersonDataResponse personDataResponse = personService.findAll();
         return new ResponseEntity<>(personDataResponse, HttpStatus.OK);

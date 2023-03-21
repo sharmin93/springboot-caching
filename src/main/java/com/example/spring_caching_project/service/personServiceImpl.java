@@ -7,18 +7,30 @@ import com.example.spring_caching_project.response.PersonData;
 import com.example.spring_caching_project.response.PersonDataResponse;
 import com.example.spring_caching_project.response.PersonDeleteResponse;
 import com.example.spring_caching_project.response.PersonResponse;
+import jakarta.annotation.PostConstruct;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.management.ObjectName;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class personServiceImpl implements PersonService {
     private final PersonRepository personRepository;
+    private static final String table_name = "person";
+    private RedisTemplate<String, Object> redisTemplate;
+    private HashOperations<String, Long, Object> hashOperations;
 
-    public personServiceImpl(PersonRepository personRepository) {
+    public personServiceImpl(PersonRepository personRepository, RedisTemplate<String, Object> template) {
         this.personRepository = personRepository;
+        this.redisTemplate = template;
+
     }
+
+
 
     @Override
     public PersonResponse createPerson(PersonRequest personRequest) {
@@ -32,6 +44,7 @@ public class personServiceImpl implements PersonService {
         personResponse.setFirstName(personEntity.getFirstName());
         personResponse.setLastName(personEntity.getLastName());
         personResponse.setAge(personEntity.getAge());
+        hashOperations.put(table_name, personResponse.getId(), personResponse);
         return personResponse;
     }
 
@@ -46,6 +59,7 @@ public class personServiceImpl implements PersonService {
             personResponse.setFirstName(personById.getFirstName());
             personResponse.setLastName(personById.getLastName());
             personResponse.setAge(personById.getAge());
+            hashOperations.get(table_name,id);
             return personResponse;
         }
 
@@ -89,6 +103,7 @@ public class personServiceImpl implements PersonService {
             personResponse.setFirstName(findFirstName.getFirstName());
             personResponse.setLastName(findFirstName.getLastName());
             personResponse.setAge(findFirstName.getAge());
+            hashOperations.get(table_name,firstName);
             return personResponse;
         }
 
